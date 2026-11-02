@@ -7,7 +7,7 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 # optimize python
 ENV UV_COMPILE_BYTECODE=1
 ENV PYTHONUNBUFFERED=1
-ENV PORT=8000
+ENV PORT=8080
 
 WORKDIR /backend
 
