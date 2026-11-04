@@ -6,17 +6,24 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # optimize python
 ENV UV_COMPILE_BYTECODE=1
+ENV UV_LINK_MODE=copy
 ENV PYTHONUNBUFFERED=1
 ENV PORT=8080
 
 WORKDIR /backend
 
-# copy dep manifest
-COPY pyproject.toml uv.lock* ./
+# install deps first so this layer is cached until uv.lock changes
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev --no-install-project
+
+# install the project itself
+COPY README.md ./
+COPY src ./src
 RUN uv sync --frozen --no-dev
 
-# expose virtual env
-ENV PATH="/app/.venv/bin:$PATH"
+# least privilege: run as an unprivileged user
+RUN useradd --system --no-create-home app
+USER app
 
 # uvicorn bound to Cloud Run's $PORT
-CMD exec uvicorn backend.main:main --host 0.0.0.0 --port $PORT
+CMD exec /backend/.venv/bin/uvicorn backend.main:app --host 0.0.0.0 --port $PORT
