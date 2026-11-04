@@ -14,7 +14,7 @@ dependencies = [
 
 [project.scripts]
 backend = 'backend.main:main'
-export-openapi = 'backend.openapi:main'
+export-openapi = 'backend.services:export_openapi'
 
 [dependency-groups]
 dev = [
