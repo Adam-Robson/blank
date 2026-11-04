@@ -112,8 +112,11 @@ uv run pytest
 ### Frontend Tooling
 
 - npm; run commands from `frontend/`.
-- TypeScript strict; Prettier with single quotes
-  (including JSX); ESLint flat config.
+- TypeScript strict. Biome (`biome.json`) is the only
+  linter and formatter: single quotes (including JSX),
+  80 columns, recommended rules plus the React and test
+  domains. Don't add ESLint or Prettier.
+- Buttons always set an explicit `type`.
 - No `as` casts or `!` assertions to silence the type
   checker; narrow with checks or type guards.
 
@@ -143,6 +146,5 @@ uv run pytest
 ```sh
 npm run typecheck
 npm run lint
-npm run format:check
 npm test
 ```
